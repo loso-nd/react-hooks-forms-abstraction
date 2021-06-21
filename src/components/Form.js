@@ -1,21 +1,66 @@
 import React, { useState } from "react";
 
 function Form() {
-  const [firstName, setFirstName] = useState("John");
-  const [lastName, setLastName] = useState("Henry");
 
-  function handleFirstNameChange(event) {
-    setFirstName(event.target.value);
+  const [formData, setformData] = useState({
+    firstName: "Flatiron",
+    lastName: "Software Engineering",
+    admin: false,
+    submitted: [],
+    errors: []
+  })
+
+    // name is the KEY in of the formData object we're trying to update
+  function handleChange(event) {
+    console.log('First: ', formData.firstName)
+    console.log('Last: ', formData.lastName)
+    const name = event.target.name
+    let value = event.target.value
+
+    if (event.target.type === "checkbox"){
+      console.log("Are you subscribed :", formData.admin)
+      value = event.target.checked
+      setformData(event.target.checked)
+    }
+
+    setformData({...formData, [name]: value});
   }
 
-  function handleLastNameChange(event) {
-    setLastName(event.target.value);
+  function handleSubmit(e, formData) {
+    e.preventDefault()
+    console.log(formData)
+    if(formData.firstName > 0){
+      const newFormData = {
+        firstName: formData.firstName, 
+        lastName: formData.lastName, 
+        admin: formData.admin};
+      setformData([...formData.submitted, newFormData])
+      setformData.firstName("")
+      setformData.lastName("")
+      setformData.errors([])
+    } 
   }
+
 
   return (
-    <form>
-      <input type="text" onChange={handleFirstNameChange} value={firstName} />
-      <input type="text" onChange={handleLastNameChange} value={lastName} />
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="newsletter">Subscribe to Newsletter?</label>
+      <input 
+        type="checkbox"
+        name="admin"
+        onChange={handleChange}
+        checked={formData.admin} />       
+        <hr/>
+      <input 
+        type="text" 
+        name="firstName"
+        onChange={handleChange} 
+        value={formData.firstName} />
+      <input 
+        type="text" 
+        name="lastName"
+        onChange={handleChange} 
+        value={formData.lastName} />
       <button type="submit">Submit</button>
     </form>
   );
